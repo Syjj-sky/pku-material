@@ -1,0 +1,919 @@
+P![image-20240229153353605](C:\Users\sky\AppData\Roaming\Typora\typora-user-images\image-20240229153353605.png)
+
+
+
+# Week 2
+
+## DSA
+
+ Data Structure and Algorithms
+
+**Data Structure**:a particular way of storing and organizing data in our devices to use the data efficiently and effectively
+
+**Algorithms**:a process or set of well-defined instructions that are typically used to solve a particular group of problems or perform a specific type of calculation
+
+## Complexties
+
+O/Ω/θ
+
+### Sorting
+
+#### 1.Insertion sort
+
+```python
+def insertionSort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]#移动第i个元素
+        j = i-1#与前面的元素比较
+        while j >= 0 and key < arr[j] :#将key与第j个元素比较前排
+                arr[j + 1] = arr[j]#第j个元素后移
+                j -= 1
+        arr[j + 1] = key
+#test
+arr = [12, 11, 13, 5, 6]
+insertionSort(arr)
+for i in range(len(arr)):
+    print ("% d" % arr[i])
+```
+
+#### 2.Bubble sort
+
+```python
+def bubbleSort(arr):
+    n = len(arr)
+    for i in range(n):
+        swapped = False
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if (swapped == False):
+            break
+```
+
+#### 3.Selection Sort
+
+```python
+def selectionSort(arr):
+    for i in range(len(arr)):
+        min_idx = i
+        for j in range(i + 1, len(arr)):
+            if arr[min_idx] > arr[j]:
+                min_idx = j
+        A[i], A[min_idx] = A[min_idx], A[i]
+```
+
+```python
+def selectionSort(arr):
+    for i in range(len(arr)-1,0,-1):
+        max_idx = 0
+        for j in range(1, i+1):
+            if arr[j] > arr[max_idx]:
+                max_idx = j
+        if max_idx != i:
+            aerr[i],arr[max_idx]=arr[max_idx],arr[i]
+```
+
+#### 4.Quick Sort
+
+```python
+#双指针实现
+def quicksort(arr, left, right):
+    if left < right:
+        partition_pos = partition(arr, left, right)
+        quicksort(arr, left, partition_pos - 1)
+        quicksort(arr, partition_pos + 1, right)
+def partition(arr, left, right):
+    i = left
+    j = right - 1
+    pivot = arr[right]#中心点pivot为right
+    while i <= j:
+        #从左向右找到>=pivot索引i'
+        while i <= right and arr[i] < pivot:
+            i += 1
+        #从右向左找到<pivot索引j'
+        while j >= left and arr[j] >= pivot:
+            j -= 1
+        #排列：arr[i] < arr[j]
+        if i < j:
+            arr[i], arr[j] = arr[j], arr[i]
+    #排入pivot数: arr[i] < pivot < arr[j]
+    if arr[i] > pivot:
+        arr[i], arr[right] = arr[right], arr[i]
+    return i
+
+#单指针实现
+def partition(array, low, high):
+    #选择中间pivot
+	pivot = array[high]
+	i = low - 1
+	for j in range(low, high):
+		if array[j] <= pivot:
+            #i为从左向右第一个比pivot大的元素
+			i = i + 1
+			(array[i], array[j]) = (array[j], array[i])
+	(array[i + 1], array[high]) = (array[high], array[i + 1])
+    #交换后i+1为第一比pivot大的元素，为新的中心店位置
+	return i + 1
+
+
+def quicksort(array, low, high):
+	if low < high:
+		pi = partition(array, low, high)
+		quicksort(array, low, pi - 1)
+		quicksort(array, pi + 1, high)
+
+#test
+arr = [22, 11, 88, 66, 55, 77, 33, 44]
+quicksort(arr, 0, len(arr) - 1)
+print(arr)
+```
+
+#### 5.Merge Sort
+
+Merge sort求逆序对
+
+```python
+def mergeSort(arr):
+	if len(arr) > 1:
+		mid = len(arr)//2
+		L = arr[:mid]
+		R = arr[mid:] 
+		mergeSort(L)
+		mergeSort(R) 
+		i = j = k = 0
+		# 将排好序的L和R按大小排入arr中
+		while i < len(L) and j < len(R):
+			if L[i] <= R[j]:
+				arr[k] = L[i]
+				i += 1
+			else:
+				arr[k] = R[j]
+				j += 1
+			k += 1
+        #填入没有遍历到的L或R
+		while i < len(L):
+			arr[k] = L[i]
+			i += 1
+			k += 1
+		while j < len(R):
+			arr[k] = R[j]
+			j += 1
+			k += 1
+```
+
+#### 6.Shell Sort
+
+```python
+def shellSort(arr, n):
+    gap = n // 2
+    while gap > 0:
+        j = gap
+        #从j往前每隔gap插入
+        while j < n:
+            i = j - gap 
+            while i >= 0:
+                if arr[i + gap] > arr[i]:
+                    break
+                else:
+                    arr[i + gap], arr[i] = arr[i], arr[i + gap]
+
+                i = i - gap  
+            j += 1
+        gap = gap // 2
+```
+
+### O(N)
+
+![image-20240514151740479](C:\Users\sky\AppData\Roaming\Typora\typora-user-images\image-20240514151740479.png)
+
+# Week 3
+
+```python
+class TreeNode():#节点类
+    def __init__(self):
+        self.left=None
+        self.right=None
+        
+#用列表建树，索引第几个节点
+nodes=[TreeNonde() for _ in range(n)]
+```
+
+## 树表示方法
+
+### 括号嵌套树
+
+s: A(B(E),C(F,G),D(H(I)))
+
+```python
+#建立node类
+class TreeNode():
+    def __init__(self,value):
+        self.value=value
+        self.children=[]
+
+def parse_tree_list(s):
+    stack=[]#stack记录需要添加子树的节点
+    node=None#node记录操作中节点
+    for char in s:
+        if char.isalpha():
+            #创建新节点
+            node=TreeNonde(char)
+            if stack:
+                stack[-1].children.append(node)
+        elif char == '(':
+            if node:
+                stack.append(node)
+                node=None
+        elif char == ')':
+            if stack:
+                node=stack.pop()
+        return node
+#dict 表示 node
+def parse_tree(s):
+    stack=[]
+    node=None
+    for char in s:
+        if char.isalpha(): 
+            node = {'value': char, 'children': []}
+            if stack: 
+                stack[-1]['children'].append(node)
+        elif char == '(': 
+            if node:
+                stack.append(node) 
+                node = None
+        elif char == ')':
+            if stack:
+                node = stack.pop() 
+    return node
+```
+
+## 二叉树应用
+
+### 解析树
+
+（：建立新树------------------当前节点天极爱并下沉左节点
+
+）：表达式终点---------------返回父节点
+
+操作数：运算符子节点------设置当前节点并返回父节点
+
+运算符----------------------------当前节点设为运算符，添加并下沉至右节点
+
+## Class
+
+### 魔术方法
+
+Python的特殊方法（也称为魔术方法或魔法方法）是一组在类中使用双下划线（__）包围的预定义方法。这些方法提供了一种自定义类行为的机制，用于重载运算符、实现迭代、访问属性等。
+
+`__str__(self)`：
+用于返回对象的字符串表示形式。当我们使用print函数或者在字符串中引用对象时，会自动调用该方法。它通常被用于提供有意义的对象描述。例如，当我们定义一个名为Person的类并实现`__str__`方法时，可以返回该对象的姓名和年龄的字符串表示。
+
+`__iter__(self)`：
+用于返回一个迭代器对象，使得我们可以在自定义的类上实现迭代功能。迭代器对象提供了`__next__`方法，用于按照定义的规则返回下一个值。通过实现`__iter__`方法，我们可以使用for循环等迭代器相关操作来遍历自定义类的实例。
+
+`__contains__(self, item)`：
+方法用于确定对象是否包含特定的元素。当我们使用in运算符来检查一个对象是否包含某个元素时，会调用该方法。我们可以在自定义的类中实现`__contains__`方法来定义对象的包含逻辑。例如，当我们定义一个名为MyList的类，并实现`__contains__`方法时，可以检查列表中是否包含特定元素。
+
+#### Fraction
+
+```python
+class Fraction:
+	def __init__(self,top,bottom):
+		self.num=top
+    	self.den=bottom
+    def __str__(self):#print对象时自动调用
+        return str(self.num)+'/'+str(self.den)
+	def __add__(self,otherfraction):
+        new_num=self.num*otherfraction+self.den*otherfraction.num
+        new_den=self.den*otherfraction.den
+		return Fraction(new_num//gcd,new_den//gcd)   
+    def __eq__(self,other):
+        num_1=self.num*other.den
+        num_2=other.num*self.den
+        return num_1 == num_2
+```
+
+##### 最大公因数——欧几里得算法
+
+```python
+def gcd(m,n):
+    m,n=max(m,n),min(m,n)
+	while m%n != 0:
+		gcd(n,m%n)
+    return n
+```
+
+# Tree
+
+## Time complexity
+
+
+
+## BinaryTree
+
+### 构建树
+
+```python
+class Tree():
+    def __init__(self,root):
+        self.key=root
+        self.l,self.r=None,None
+        
+    def insert_l(self,new):#插入左节点，右节点同理
+        if self.l == None:
+            self.l=Tree(new)
+        else:
+            t=Tree(new)
+            t.l,self.l=self.l,t
+        
+    def set_root(self,obj):#设置根节点
+        self.key=obj
+    def get_l(self):#获取左节点，右节点同理
+        return self.l()
+    def get_root(self):#获取根节点
+        return self.key
+```
+
+
+
+### 解析树——树的遍历方法
+
+```python
+tree=Tree()#tree为之前建好的类
+
+def preorder(tree):#前序遍历
+    if tree:
+        print(tree.get_root)
+        preorder(tree.get_l)
+        preorder(tree.get_r)
+        
+def postorder(tree):#后序遍历
+    if tree:
+        postorder(tree.get_l)
+        postorder(tree.get_r)
+        print(tree.get_root)
+        
+def middleorder(tree):#中序遍历
+    if tree:
+        middleorder(tree.get_l)
+        printt(tree.get_root)
+        middleorder(tree.get_r)
+```
+
+## 堆
+
+### 二叉堆
+
+#### 完全二叉树
+
+p→2p/2p+1
+
+```python
+class BinHeap:
+    def __init__(self):#初始化堆列表和size
+        self.heaplist=[0]
+        self.size=0
+    def insert(self,x):#插入x到最后并 从下往上 调整
+        self.heaplist.append(x)
+        self.size+=1
+        self.percUp(self.size)
+    def delMin(self):#删除最小(heaplist[1])元素并 从上往下 调整
+        re=self.heaplist[1]
+        self.heaplist[1]=self.heaplist[self.size]
+        self.size-=1
+        self.heaplist.pop()
+        self.percDown(1)
+        return re
+    def percUp(self,i):#从下往上调整
+        while i//2 > 0:
+            if self.heaplist[i] < self.heaplist[i//2]:
+                self.heaplist[i],self.heaplist[i//2]=self.heaplist[i//2],self.heaplist[i]
+            i=i//2
+    def percDown(self,i):#从上往下调整
+        while (i*2) <= self.size:
+            mc=self.minChild(i)
+            if self.heaplist[i] > self.heaplist(mc):
+                self.heaplist[i],self.heaplist[mc]=self.heaplist[mc],self.heaplist[i]
+                i=mc
+            else:
+                break
+    def minChild(self,i):#判断左右最小子节点
+        if i*2+1 >self.size:
+            return i*2
+        elif self.heaplist[i*2] < self.heaplist[i*2+1]:
+            return i*2
+        else:
+            return i*2+1
+    def buildHeap(self,alist):#从元素列表构建堆
+        i=len(alist)//2
+        self.size=len(alist)
+        self.heaplist=[0]+alist[:]
+        while i > 0:
+            self.percDown(i)
+            i-=1
+```
+
+
+
+## DisjoinSet
+
+### Union by rank
+
+```python
+class DisjSet:
+    def __init__(self,n):
+        self.rank=[1]*n
+        self.parent=[i for i in range(n)]
+    def find(self,x):#将parent中元素用代表元素取代
+        if self.parent[x] != x:
+            self.parent[x]=self.find(self.parent[x])
+        return self.parent[x]
+    def union(self,x,y):
+        xp=self.find(x)
+        yp=self.find(y)
+        if xp=yp:
+            return
+        elif self.rank[xp] < self.rank[yp]:
+            self.parent[xp]=yp
+        elif self.rank[xp] > self.rank[yp]:
+            self.parent[yp]=xp
+        else:
+            self.parent[yp]=xp
+            self.rank[xp]+=1
+```
+
+### Union by size
+
+```python
+class UnionFind:
+    def __init__(self,n):
+        self.parent=list(range(n))
+        self.size=[1]*n
+    def find(self,i):
+        if self.parent[i] != i:
+            self.parent[i]=self.find(self.parent[i])
+        retturn self.parent[i]
+    def union(self,i,j):
+        ip=self.find(i)
+        jp=self.find(j)
+        if ip == jp:
+            return
+        isize=self.size[i]
+        jsize=self.size[j]
+        if isize < jsize:
+            self.parent[ip]=jp
+            self.size[jp]+=self.size[ip]
+        else:
+            self.parent[jp]=ip
+            self.size[ip]+=self.size[jp]
+```
+
+# Graph
+
+## 表示方法
+
+### Adjacent matrix
+
+```python
+n, m = map(int, input().split())
+adjacency_matrix = [[0]*n for _ in range(n)]
+for _ in range(m):
+    u, v = map(int, input().split())
+    adjacency_matrix[u][v] = 1#无向图VS有向图
+    adjacency_matrix[v][u] = 1
+```
+
+### Adjacent list
+
+```python
+n, m = map(int, input().split())
+adjacency_list = [[] for _ in range(n)]
+for _ in range(m):
+    u, v = map(int, input().split())
+    adjacency_list[u].append(v)#有向图VS无向图
+    adjacency_list[v].append(u)
+```
+
+
+
+### 关联矩阵
+
+```python
+class Graph:
+    def __init__(self, vertices, edges):
+        self.vertices = vertices
+        self.edges = edges
+        self.adj_matrix = self.create_adj_matrix()
+
+    def create_adj_matrix(self):
+        adj_matrix = [[0] * len(self.edges) for _ in range(len(self.vertices))]#创建空关联矩阵
+        for i, vertex in enumerate(self.vertices):
+            for j, edge in enumerate(self.edges):
+                if vertex in edge:
+                    adj_matrix[i][j] = 1
+        return adj_matrix
+
+    def display_adj_matrix(self):
+        for row in self.adj_matrix:
+            print(row)
+vertices = ['A', 'B', 'C', 'D']
+edges = [('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A')]
+graph = Graph(vertices, edges)
+```
+
+### 图的类实现
+
+```python
+class Vertex:
+    def __init__ (self,key):
+        self.id=key
+        self.to={}
+    def add_nbr(self,nbr,weight):#添加邻居
+        self.to[nbr]=weight
+    def get_weight(self,nbr):#得到nbr边权重
+        return self.to[nbr]
+    
+class Graph:
+    def __init__(self):
+        self.verlist={}
+        self.n_ver=0
+    def add_ver(self,key):
+        self.n_ver+=1
+        new_ver=Vertex(key)
+        self.verlist[key]=new_ver
+    def add_edge(self,f,t,weight):#添加边
+        if f not in self.verlist:
+            self.add_ver(f)
+        if t not in self.verlist:
+            self.add_ver(t)
+        self.verlist[f].add_nbr(self.verlist[t],weight)
+```
+
+![image-20240514160407640](C:\Users\sky\AppData\Roaming\Typora\typora-user-images\image-20240514160407640.png)
+
+## 图的遍历
+
+### BFS
+
+无向图&无权重
+
+```python
+def bfs(graph, initial):
+    visited = []
+    queue = [initial]
+
+    while queue:
+        node = queue.pop(0)
+        if node not in visited:
+            visited.append(node)
+            neighbours = graph[node]
+
+            for neighbour in neighbours:
+                queue.append(neighbour)
+    return visited
+```
+
+### DFS
+
+```python
+import sys
+while stack:                         
+    curr = stack.pop()            
+    path.append(curr)
+    for neigh in graph[curr]:        
+        if neigh not in visited:       
+            visited.append(neigh)       
+            stack.append(neigh)         
+            if neigh == dest :            
+                print(*path)#好像有点问题，不是最短路径
+                sys.exit(0)
+```
+
+## 图的算法
+
+### Dijkstra算法
+
+1.初始化数组
+
+2.当前节点--未访问节点中距离最小
+
+3.更新当前节点距离
+
+4.标记当前访问
+
+```python
+import heapq
+def bfs(x,y):#从x，y开始搜索
+    route=[(0,x,y)]
+    visited={(x,y)}
+    while route:
+        get,x,y=heapq.heappop(route)#权值最小的路径
+        visited.add((x,y))
+        if x == x1 and y == y1:#到达目的地x1，y1
+            return get
+        for dx,dy in dir:
+            xx,yy=x+dx,y+dy
+            if 0 <= xx < m and 0 <= yy < n and (xx,yy) not in visited and ma[xx][yy] != '#':#满足条件，添加（xx，yy）
+                g=get+weight[((x,y),(xx,yy))]#从xx到yy的权值
+                heapq.heappush(route,(g,xx,yy))
+    return 'NO'
+
+m,n,p=map(int,input().split())
+ma={i:{j:x for j,x in zip(range(n),input().split())}for i in range(m)}
+dir=[[0,-1],[0,1],[1,0],[-1,0]]
+for _ in range(p):
+    x,y,x1,y1=map(int,input().split())
+    if ma[x][y] == '#' or ma[x1][y1] == '#':
+        print('NO')
+    else:
+        print(bfs(x,y))
+```
+
+**O(V^2)**
+
+优先队列（最小堆）-- O((V+E)logV)
+
+### Bellman-Ford算法
+
+1.初始化数组
+
+2.v-1循环：更新 min（u+（u，v），v）
+
+3.检查是否具有负权回路
+
+**O(V*E)**
+
+### Floyd-Warshall算法
+
+1.初始化二维数组dist [i] [j]
+
+2.遍历定点k，更新以k为中间节点的min（dist [i] [j]）
+
+**O(V^3)**
+
+```python
+def floyd_warshall(graph):
+    n = len(graph)
+    dist = [[float('inf')] * n for _ in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                dist[i][j] = 0
+            elif j in graph[i]:
+                dist[i][j] = graph[i][j]
+
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+
+    return dist
+```
+
+
+
+### 最小生成树MST
+
+#### Prim算法
+
+```python
+def cmp(key1, key2):
+    return (key1, key2) if key1 < key2 else (key2, key1)
+
+
+def prim(graph, init_node):
+    visited = {init_node}
+    candidate = set(graph.keys())
+    candidate.remove(init_node)  # add all nodes into candidate set, except the start node
+    tree = []
+
+    while len(candidate) > 0:
+        edge_dict = dict()#存贮边
+        for node in visited:
+            for connected_node, weight in graph[node].items():
+                if connected_node in candidate:
+                    edge_dict[cmp(connected_node, node)] = weight
+        edge, cost = sorted(edge_dict.items(), key=lambda kv: kv[1])[0]  # 权重最小边
+        tree.append(edge)
+        visited.add(edge[0]);visited.add(edge[1])
+        candidate.discard(edge[0]);candidate.discard(edge[1])
+    return tree
+
+graph_dict = {
+    "A": {"B": 7, "D": 5},
+    "B": {"A": 7, "C": 8, "D": 9, "E": 5},
+    "C": {"B": 8, "E": 5},
+    "D": {"A": 5, "B": 9, "E": 15, "F": 6},
+    "E": {"B": 7, "C": 5, "D": 15, "F": 8, "G": 9},
+    "F": {"D": 6, "E": 8, "G": 11},
+    "G": {"E": 9, "F": 11}
+}
+path = prim(graph_dict, "D")
+print(path)  # [('A', 'D'), ('D', 'F'), ('A', 'B'), ('B', 'E'), ('C', 'E'), ('E', 'G')]
+```
+
+
+
+![](D:\北大\课程\24春\数算\课件\Prim算法.jpg)
+
+#### Kruskal算法
+
+```
+def cmp(key1, key2):
+    return (key1, key2) if key1 < key2 else (key2, key1)
+
+
+def find_parent(record, node):
+    if record[node] != node:
+        record[node] = find_parent(record, record[node])
+    return record[node]
+
+
+def naive_union(record, edge):
+    u, v = find_parent(record, edge[0]), find_parent(record, edge[1])
+    record[u] = v
+
+
+def kruskal(graph, init_node):
+    edge_dict = {}
+    for node in graph.keys():
+        edge_dict.update({cmp(node, k): v for k, v in graph[node].items()})
+    sorted_edge = list(sorted(edge_dict.items(), key=lambda kv: kv[1]))
+    tree = []
+    connected_records = {key: key for key in graph.keys()}
+
+    for edge_pair, _ in sorted_edge:
+        if find_parent(connected_records, edge_pair[0]) != \
+                find_parent(connected_records, edge_pair[1]):
+            tree.append(edge_pair)
+            naive_union(connected_records, edge_pair)
+    return tree
+
+
+graph_dict = {
+    "A": {"B": 7, "D": 5},
+    "B": {"A": 7, "C": 8, "D": 9, "E": 5},
+    "C": {"B": 8, "E": 5},
+    "D": {"A": 5, "B": 9, "E": 15, "F": 6},
+    "E": {"B": 7, "C": 5, "D": 15, "F": 8, "G": 9},
+    "F": {"D": 6, "E": 8, "G": 11},
+    "G": {"E": 9, "F": 11}
+}
+path = kruskal(graph_dict, "D")
+print(path)  # [('A', 'D'), ('D', 'F'), ('A', 'B'), ('B', 'E'), ('C', 'E'), ('E', 'G')]
+```
+
+![](D:\北大\课程\24春\数算\课件\Kruskal算法.jpg)
+
+```python
+#yhf
+class DisjointSet:
+    def __init__(self, num_vertices):
+        self.parent = list(range(num_vertices))
+        self.rank = [0] * num_vertices
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        root_x = self.find(x)
+        root_y = self.find(y)
+
+        if root_x != root_y:
+            if self.rank[root_x] < self.rank[root_y]:
+                self.parent[root_x] = root_y
+            elif self.rank[root_x] > self.rank[root_y]:
+                self.parent[root_y] = root_x
+            else:
+                self.parent[root_x] = root_y
+                self.rank[root_y] += 1
+
+
+def kruskal(graph):
+    num_vertices = len(graph)
+    edges = []
+
+    # 构建边集
+    for i in range(num_vertices):
+        for j in range(i + 1, num_vertices):
+            if graph[i][j] != 0:
+                edges.append((i, j, graph[i][j]))
+
+    # 按照权重排序
+    edges.sort(key=lambda x: x[2])
+
+    # 初始化并查集
+    disjoint_set = DisjointSet(num_vertices)
+
+    # 构建最小生成树的边集
+    minimum_spanning_tree = []
+
+    for edge in edges:
+        u, v, weight = edge
+        if disjoint_set.find(u) != disjoint_set.find(v):
+            disjoint_set.union(u, v)
+            minimum_spanning_tree.append((u, v, weight))
+
+    return minimum_spanning_tree
+```
+
+### 拓扑排序
+
+#### Kahn算法
+
+```python
+from collections import defaultdict
+from queue import Queue   #FIFO
+def topological_sort(graph):
+    indegree = defaultdict(int)
+    result = []
+    queue = Queue()
+    # 计算每个顶点的入度
+    for u in graph:
+        for v in graph[u]:
+            indegree[v] += 1
+    # 将入度为 0 的顶点加入队列
+    for u in graph:
+        if indegree[u] == 0:
+            queue.put(u)
+    # 执行拓扑排序
+    while not queue.empty():
+        u = queue.get()
+        result.append(u)
+        for v in graph[u]:
+            indegree[v] -= 1
+            if indegree[v] == 0:
+                queue.put(v)
+    # 检查是否存在环
+    if len(result) == len(graph):
+        return result
+    else:
+        return None
+```
+
+### 关键路径
+
+#### AOV网络关键路径算法
+
+### 判断连通/环
+
+```
+def isconnected(graph,n):
+    ind=defaultdict(int)
+    for i,nbr in graph.items():
+        for v in nbr:
+            ind[v]+=1
+    if len(ind) < n:
+        return False
+    else:
+        return True
+    
+#无向图判断是否有环（有向图判断是否有环使用拓扑排序算法
+def isloop(graph,n):
+    all_visited=[1]*(n+1)
+    def dfs(init):
+        visited[init]=0
+        all_visited[init]=0
+        for v in graph[init]:
+            if (v,init) in record:
+                continue
+            else:
+                record.add((init,v))
+            if visited[v] == 0:
+                return True
+            else:
+                if dfs(v):
+                    return True
+        return False
+    for i in range(1,n+1):
+        if all_visited[i]:
+            visited=[1]*(n+1)
+            record=set()
+            if dfs(i):
+                return True
+    return False
+```
+
+
+
+# 作业
+
+## 单调栈
+
+```python
+right=[n]*n
+stack=[]
+for i in range(n-1,-1,-1):#单调递增栈，找到第i只奶牛右边第一个>hi的奶牛
+    while stack and hi[stack[-1]] <= hi[i]:
+        stack.pop()
+    if stack:
+        right[i]=stack[-1]
+    else:
+        right[i]=n
+    stack.append(i)
+```
+
